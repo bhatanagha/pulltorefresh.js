@@ -28,15 +28,22 @@ try {
 function setupDOM(handler) {
   if (!handler.ptrElement) {
     var ptr = document.createElement('div');
-
-    if (handler.mainElement !== document.body) {
+    if ((document.querySelector('mosaic-container[navbar]') && document.querySelector('mosaic-container[navbar]').hasAttribute('fixed')) || 
+    (document.querySelector('mosaic-navbar') && document.querySelector('mosaic-navbar').hasAttribute('fixed-top'))) {
+      if (document.querySelector('mosaic-container[navbar]')) {
+        document.querySelector('mosaic-container[inner]').insertBefore(ptr, document.querySelector('mosaic-container[inner]').firstChild)
+      } else {
+        document.querySelector('mosaic-content-container').insertBefore(ptr, document.querySelector('mosaic-content-container').firstChild)
+      }
+    }
+    else if (handler.mainElement !== document.body) {
       handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
     } else {
       document.body.insertBefore(ptr, document.body.firstChild);
     }
 
     ptr.classList.add(((handler.classPrefix) + "ptr"));
-    ptr.innerHTML = handler.getMarkup().replace(/__PREFIX__/g, handler.classPrefix);
+    // ptr.innerHTML = handler.getMarkup().replace(/__PREFIX__/g, handler.classPrefix);
     handler.ptrElement = ptr;
 
     if (typeof handler.onInit === 'function') {
@@ -295,7 +302,7 @@ var _setupEvents = (function () {
 
 var _ptrMarkup = "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>\n";
 
-var _ptrStyles = "\n.__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n\n.__PREFIX__pull {\n  transition: none;\n}\n\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n\n/*\nWhen at the top of the page, disable vertical overscroll so passive touch\nlisteners can take over.\n*/\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n";
+var _ptrStyles = "\n.__PREFIX__ptr {\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n\n.__PREFIX__pull {\n  transition: none;\n}\n\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n\n/*\nWhen at the top of the page, disable vertical overscroll so passive touch\nlisteners can take over.\n*/\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n";
 
 var _defaults = {
   distThreshold: 60,
