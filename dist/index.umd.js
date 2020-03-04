@@ -37,8 +37,15 @@
   function setupDOM(handler) {
     if (!handler.ptrElement) {
       var ptr = document.createElement('div');
-
-      if (handler.mainElement !== document.body) {
+      if ((document.querySelector('mosaic-container[navbar]') && document.querySelector('mosaic-container[navbar]').hasAttribute('fixed')) || 
+      (document.querySelector('mosaic-navbar') && document.querySelector('mosaic-navbar').hasAttribute('fixed-top'))) {
+        if (document.querySelector('mosaic-container[navbar]')) {
+          document.querySelector('mosaic-container[inner]').insertBefore(ptr, document.querySelector('mosaic-container[inner]').firstChild)
+        } else {
+          document.querySelector('mosaic-content-container').insertBefore(ptr, document.querySelector('mosaic-content-container').firstChild)
+        }
+      }
+     else if (handler.mainElement !== document.body) {
         handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
       } else {
         document.body.insertBefore(ptr, document.body.firstChild);
